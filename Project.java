@@ -1,3 +1,4 @@
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -12,7 +13,7 @@ public class Project{
 	public static int numOfNodes;
 	public static Edge[] sorted;
 	//public static double reliability=1;
-	public static double expectedReliability = 0.79;
+	public static double expectedReliability = 0.95;
 	public static double Rmax;
 	public static int Rindex;
 	public static double currentR=1; //current reliablility
@@ -21,21 +22,21 @@ public class Project{
 
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
-		ReadFile("E:/git/FaultTolerantSysProject/input.txt");
+		ReadFile("/Users/sentinel/Desktop/git/Network-Design/src/input.txt");
 		sorted = SortData(reliabilities,costs);
 
 		stem = FindStem(numOfNodes,sorted);
 
 		currentR=Probability(stem);
-		System.out.println("currentR "+currentR);
+		//System.out.println("currentR "+currentR);
 		unAdded = FindUnAddEdge(stem,sorted);
 
 		currentEdge = new ArrayList<Edge>();
 		currentEdge = (ArrayList<Edge>) stem.clone();
 		mstEdgeN=stem.size();
 
-		for(int xxxx=0;xxxx<1;xxxx++){
-		//while(currentR<expectedReliability) {
+		//for(int xxxx=0;xxxx<1;xxxx++){
+		while(currentR<expectedReliability) {
 
 			double[] rUnadded=new double[unAdded.size()];
 
@@ -51,11 +52,13 @@ public class Project{
 
 				//System.out.println("cloneListe "+cloneList.size()+" cloneUnadded "+cloneUnadded.size());
 				rUnadded[i]=findR(cloneList,emptyL);
+
+				//System.out.println("hhhhah"+rUnadded[i]);
 			}
 			Rindex=0;
 			Rmax=rUnadded[0];
 			for(int i = 1; i<rUnadded.length;i++) {
-				System.out.println(rUnadded[i]);
+				//System.out.println(rUnadded[i]);
 				if(Rmax<rUnadded[i]) {
 
 					Rmax = rUnadded[i];
@@ -64,13 +67,15 @@ public class Project{
 			}
 			currentEdge.add(unAdded.get(Rindex));
 			currentR=Rmax;
-			System.out.println("currentR "+currentR);
+			//System.out.println("currentR "+currentR);
 			unAdded.remove(unAdded.get(Rindex));
 		}
 		for(int i = 0; i<currentEdge.size();i++) {
-			System.out.print("x:" + currentEdge.get(i).x);
-			System.out.println(" y:" + currentEdge.get(i).y);
+			System.out.print("node " +i+ " from " + currentEdge.get(i).x);
+			System.out.println(" to " + currentEdge.get(i).y);
+			//System.out.println("reliabl "+ currentEdge.get(i).reliability);
 		}
+		System.out.println("achieved reliability: " + Rmax);
 	}
 	public static void ReadFile(String fileName){
 		String line = null;
@@ -204,6 +209,7 @@ public class Project{
 
 		double rTotal=0;
 		if((edges.size()+additional.size())==mstEdgeN && isConnect(edges,additional)){
+			//System.out.print("MST, prob: "+Probability(edges));
 			return Probability(edges);
 		}else{
 			if(!isConnect(edges,additional)){
@@ -261,7 +267,7 @@ public class Project{
 				}
 			}
 		}
-		if (nodeConnected.contains(false)){
+		if (nodeConnected.contains(0)){
 			return false;
 		}
 		return true;
