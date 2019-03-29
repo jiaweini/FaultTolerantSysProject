@@ -12,29 +12,35 @@ public class Project{
 	public static int numOfNodes;
 	public static Edge[] sorted;
 	//public static double reliability=1;
-	public static double expectedReliability = 0.8;
+	public static double expectedReliability = 0.79;
 	public static double Rmax;
 	public static int Rindex;
-	public static double currentR; //current reliablility
+	public static double currentR=1; //current reliablility
 	public static int currentEn; //current edge count
 	public static int mstEdgeN; //number of edges for mst
 	public static ArrayList<Edge> currentEdge;
 
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		ReadFile("E:/git/FaultTolerantSysProject/input.txt");
 		sorted = SortData(reliabilities,costs);
 
-		currentEdge = FindStem(numOfNodes,sorted);
+		stem = FindStem(numOfNodes,sorted);
 
 		for(int i =0 ; i<stem.size();i++) {
 			double temp=stem.get(i).reliability;
 			currentR = temp*currentR;
 		}
+		System.out.println(currentR);
 		unAdded = FindUnAddEdge(stem,sorted);
-		//System.out.println(unAdded.size());
+		
+		currentEdge = new ArrayList<Edge>();
+		currentEdge = (ArrayList<Edge>) stem.clone();
+		
+		
 
-		while(currentR<expectedReliability) {
-
+		//while(currentR<expectedReliability) {
+		for(int xxx=0;xxx<3;xxx++){
 			double[] rUnadded=new double[unAdded.size()];
 
 			for(int i =0; i<unAdded.size();i++) {
@@ -42,11 +48,15 @@ public class Project{
 				Edge e = unAdded.get(i);
 
 				ArrayList<Edge> cloneList = new ArrayList<Edge>();
-				cloneList = currentEdge;
-				System.out.println(currentEdge.size());
-				//ArrayList<Edge> cloneList =(ArrayList<Edge>)currentEdge.clone();
+				cloneList = (ArrayList<Edge>) currentEdge.clone();
 				cloneList.add(e);
-				rUnadded[i]=findR(cloneList);
+				
+				ArrayList<Edge> cloneUnadded = new ArrayList<Edge>();
+				cloneUnadded = (ArrayList<Edge>) unAdded.clone();
+				cloneUnadded.remove(e);
+				
+				System.out.println("cloneListe "+cloneList.size()+" cloneUnadded "+cloneUnadded.size());
+				rUnadded[i]=findR(cloneList,cloneUnadded);
 			}
 			Rindex=0;
 			Rmax=rUnadded[0];
@@ -58,10 +68,11 @@ public class Project{
 			}
 			currentEdge.add(unAdded.get(Rindex));
 			currentR=Rmax;
+			unAdded.remove(unAdded.get(Rindex));
 		}
 		for(int i = 0; i<currentEdge.size();i++) {
 			System.out.print("x:" + currentEdge.get(i).x);
-			System.out.println("  y:" + currentEdge.get(i).y);
+			System.out.println(" y:" + currentEdge.get(i).y);
 		}
 	}
 	public static void ReadFile(String fileName){
@@ -185,7 +196,7 @@ public class Project{
 			probability = temp* probability;
 		}
 		for(int i =0; i<unWorked.size();i++) {
-			double temp =1 - workedEdges.get(i).reliability;
+			double temp =1 - unWorked.get(i).reliability;
 			probability = temp * probability;
 		}
 		return probability;
@@ -198,19 +209,38 @@ public class Project{
 		}
 		return totalCosts;
 	}
-	public static double findR(ArrayList<Edge> edges){
+	
+	
+	
+	@SuppressWarnings("unchecked")
+	public static double findR(ArrayList<Edge> edges,ArrayList<Edge> unAddedEdge){
+		System.out.println("edgesize "+edges.size()+" unaddedsize "+unAddedEdge.size());
+		/*
+		 * ......
+		 * edgesize 5 unaddedsize 2436
+			edgesize 5 unaddedsize 2437
+			edgesize 5 unaddedsize 2438
+			edgesize 5 unaddedsize 2439
+		 *  ......
+		 */
 		double rTotal=0;
 		if(edges.size()<mstEdgeN){
-			return 0;
+			return rTotal;
+		}else if(edges.size()==mstEdgeN &&isConnect(edges)){
+			return rTotal*Probability(edges,sorted);
 		}else{
 			if(isConnect(edges)){
 				rTotal+= Probability(edges,sorted); //TODO:
+			}else{
+				return rTotal;
 			}
-			for(Edge e:unAdded){
-
+			for(Edge e:unAddedEdge){
+				ArrayList<Edge> cloneUnadded = new ArrayList<Edge>();
+				cloneUnadded = (ArrayList<Edge>) unAddedEdge.clone();
+				
 				edges.remove(e);
-				unAdded.add(e);
-				rTotal+=findR(edges);
+				cloneUnadded.add(e);
+				rTotal+=findR(edges,cloneUnadded);
 			}
 			return rTotal;
 		}
@@ -218,7 +248,7 @@ public class Project{
 	}
 
 
-	//TODO:
+
 	public static boolean isConnect(ArrayList<Edge> edges){
 		ArrayList<Integer> nodeConnected=new ArrayList<Integer>(); // 1=true, 0=false
 		Boolean change=true;
