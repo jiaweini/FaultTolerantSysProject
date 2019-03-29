@@ -30,16 +30,16 @@ public class Project{
 			double temp=stem.get(i).reliability;
 			currentR = temp*currentR;
 		}
-		System.out.println(currentR);
+		System.out.println("currentR"+currentR);
 		unAdded = FindUnAddEdge(stem,sorted);
-		
+
 		currentEdge = new ArrayList<Edge>();
 		currentEdge = (ArrayList<Edge>) stem.clone();
 		mstEdgeN=stem.size();
-		
+
 
 		//while(currentR<expectedReliability) {
-		for(int xxx=0;xxx<1;xxx++){
+		for(int xxx=0;xxx<2;xxx++){
 			double[] rUnadded=new double[unAdded.size()];
 
 			for(int i =0; i<unAdded.size();i++) {
@@ -49,10 +49,10 @@ public class Project{
 				ArrayList<Edge> cloneList = new ArrayList<Edge>();
 				cloneList = (ArrayList<Edge>) currentEdge.clone();
 				cloneList.add(e);
-				
+
 				ArrayList<Edge> emptyL = new ArrayList<Edge>();
 
-				
+
 				//System.out.println("cloneListe "+cloneList.size()+" cloneUnadded "+cloneUnadded.size());
 				rUnadded[i]=findR(cloneList,emptyL);
 			}
@@ -61,7 +61,7 @@ public class Project{
 			for(int i = 1; i<rUnadded.length;i++) {
 				System.out.println(rUnadded[i]);
 				if(Rmax<rUnadded[i]) {
-					
+
 					Rmax = rUnadded[i];
 					Rindex = i;
 				}
@@ -209,35 +209,44 @@ public class Project{
 		}
 		return totalCosts;
 	}
-	
-	
-	
+
+
+
 	@SuppressWarnings("unchecked")
 	public static double findR(ArrayList<Edge> edges,ArrayList<Edge> additional){
 		//System.out.println("edgesize "+edges.size()+" unaddedsize "+unAddedEdge.size());
 
 		double rTotal=0;
-		if(edges.size()<mstEdgeN){
+		if((edges.size()+additional.size())<mstEdgeN){
 			return 0;
-		}else if(edges.size()==mstEdgeN &&isConnect(edges,additional)){
+		}else if((edges.size()+additional.size())==mstEdgeN &&isConnect(edges,additional)){
 			return Probability(edges,sorted);
 		}else{
 			if(!isConnect(edges,additional)){
 				return 0;
 			}
-			Edge e=edges.get(0);
-			ArrayList<Edge> cloneEdge= new ArrayList<Edge>();
-			cloneEdge= (ArrayList<Edge>) edges.clone();
-			
-				
-			cloneEdge.remove(e);
-	
-			rTotal+= (1-e.getR())*findR(cloneEdge,additional);
-			additional.add(e);
-			rTotal+=e.getR()*findR(cloneEdge,additional);
-			//System.out.println("rTotal"+rTotal);
-			
-			return rTotal;
+			if(edges.size()!=0){
+				Edge e=edges.get(0);
+				ArrayList<Edge> cloneEdge= new ArrayList<Edge>();
+				cloneEdge= (ArrayList<Edge>) edges.clone();
+
+
+				cloneEdge.remove(e);
+
+				rTotal+= (1-e.getR())*findR(cloneEdge,additional);
+				additional.add(e);
+				rTotal+=e.getR()*findR(cloneEdge,additional);
+				//System.out.println("rTotal"+rTotal);
+
+				return rTotal;
+			}else{
+				if(isConnect(edges,additional)){
+					return 1;
+				}else{
+					return 0;
+				}
+			}
+
 		}
 
 	}
@@ -267,7 +276,7 @@ public class Project{
 		}
 		return true;
 	}
-	
+
 	public static boolean isConnect(ArrayList<Edge> edges,ArrayList<Edge> additional){
 		ArrayList<Integer> nodeConnected=new ArrayList<Integer>(); // 1=true, 0=false
 		Boolean change=true;
