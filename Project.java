@@ -37,9 +37,9 @@ public class Project{
 		currentEdge = (ArrayList<Edge>) stem.clone();
 		mstEdgeN=stem.size();
 
-
+		for(int xxxx=0;xxxx<1;xxxx++){
 		//while(currentR<expectedReliability) {
-		for(int xxx=0;xxx<2;xxx++){
+
 			double[] rUnadded=new double[unAdded.size()];
 
 			for(int i =0; i<unAdded.size();i++) {
@@ -51,7 +51,6 @@ public class Project{
 				cloneList.add(e);
 
 				ArrayList<Edge> emptyL = new ArrayList<Edge>();
-
 
 				//System.out.println("cloneListe "+cloneList.size()+" cloneUnadded "+cloneUnadded.size());
 				rUnadded[i]=findR(cloneList,emptyL);
@@ -192,7 +191,7 @@ public class Project{
 		//ArrayList<Edge> unWorked= new ArrayList<Edge>();
 		//unWorked = FindUnAddEdge(workedEdges,sortedEdges);
 		for(int i =0; i<workedEdges.size();i++) {
-			double temp =workedEdges.get(i).reliability;
+			double temp =workedEdges.get(i).getR();
 			probability = temp* probability;
 		}/*
 		for(int i =0; i<unWorked.size();i++) {
@@ -225,7 +224,7 @@ public class Project{
 			if(!isConnect(edges,additional)){
 				return 0;
 			}
-			if(edges.size()!=0){
+			if(edges.size()>0){
 				Edge e=edges.get(0);
 				ArrayList<Edge> cloneEdge= new ArrayList<Edge>();
 				cloneEdge= (ArrayList<Edge>) edges.clone();
@@ -253,29 +252,6 @@ public class Project{
 
 
 
-	public static boolean isConnect(ArrayList<Edge> edges){
-		ArrayList<Integer> nodeConnected=new ArrayList<Integer>(); // 1=true, 0=false
-		Boolean change=true;
-		for(int aa=0;aa<numOfNodes;aa++){
-			nodeConnected.add(0);
-		}
-		nodeConnected.set(0,1);
-
-		while(change){
-			change=false;
-			for(Edge e:edges){
-				if( nodeConnected.get(e.getX())!= nodeConnected.get(e.getY()) ){
-					nodeConnected.set(e.getX(),1);
-					nodeConnected.set(e.getY(),1);
-					change=true;
-				}
-			}
-		}
-		if (nodeConnected.contains(false)){
-			return false;
-		}
-		return true;
-	}
 
 	public static boolean isConnect(ArrayList<Edge> edges,ArrayList<Edge> additional){
 		ArrayList<Integer> nodeConnected=new ArrayList<Integer>(); // 1=true, 0=false
