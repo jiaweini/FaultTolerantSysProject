@@ -11,7 +11,7 @@ public class Project{
 	public static ArrayList<Edge> unAdded = new ArrayList<Edge>();
 	public static int numOfNodes;
 	public static Edge[] sorted;
-	public static double reliability=1;
+	//public static double reliability=1;
 	public static double expectedReliability = 0.8;
 	public static double Rmax;
 	public static int Rindex;
@@ -21,24 +21,19 @@ public class Project{
 	 public static ArrayList<Edge> currentEdge;
 
 	public static void main(String[] args) {
-		ReadFile("/Users/sentinel/Desktop/git/Network-Design/src/input.txt");
+		ReadFile("E:/git/FaultTolerantSysProject/input.txt");
 		sorted = SortData(reliabilities,costs);
 		
 		currentEdge = FindStem(numOfNodes,sorted);
-//		for(int i =0; i<currentEdge.size();i++) {
-//			System.out.print(currentEdge.get(i).x);
-//			System.out.print("    "+currentEdge.get(i).y);
-//			System.out.print("    "+currentEdge.get(i).reliability);
-//			System.out.println("   "+currentEdge.get(i).cost);
-//		}
+
 		for(int i =0 ; i<stem.size();i++) {
 			double temp=stem.get(i).reliability;
-			reliability = temp*reliability;
+			currentR = temp*currentR;
 		}
 		unAdded = FindUnAddEdge(stem,sorted);
 		//System.out.println(unAdded.size());
 
-		while(reliability<expectedReliability) {
+		while(currentR<expectedReliability) {
 
 			double[] rUnadded=new double[unAdded.size()];
 
@@ -53,6 +48,7 @@ public class Project{
 				cloneList.add(e);
 				rUnadded[i]=findR(cloneList);
 			}
+			Rindex=0;
 			Rmax=rUnadded[0];
 			for(int i = 1; i<rUnadded.length;i++) {
 				if(Rmax<rUnadded[i]) {
@@ -61,6 +57,7 @@ public class Project{
 				}
 			}
 			currentEdge.add(unAdded.get(Rindex));
+			currentR=Rmax;
 		}
 		for(int i = 0; i<currentEdge.size();i++) {
 			System.out.print("x:" + currentEdge.get(i).x);
@@ -221,19 +218,13 @@ public class Project{
 }
 
 
-
+//TODO:
 public static boolean isConnect(ArrayList<Edge> edges){
-    int[] nodes = new int[numOfNodes];
-    for (int i = 0; i<edges.size(); i++){
-        nodes[edges.get(i).getX()-1] = 1;
-        nodes[edges.get(i).getY()-1] = 1;
-    }
-
-    for(int i = 0; i<numOfNodes; i++){
-        if(nodes[i]!=1){
-            return false;
-        }
-    }
+	Boolean[] nodeConnected=new Boolean[numOfNodes];
+	nodeConnected[0]=true;
+	for(int){
+		
+	}
     return true;
 }
     
