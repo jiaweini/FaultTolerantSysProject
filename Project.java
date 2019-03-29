@@ -26,11 +26,8 @@ public class Project{
 
 		stem = FindStem(numOfNodes,sorted);
 
-		for(int i =0 ; i<stem.size();i++) {
-			double temp=stem.get(i).reliability;
-			currentR = temp*currentR;
-		}
-		System.out.println("currentR"+currentR);
+		currentR=Probability(stem);
+		System.out.println("currentR "+currentR);
 		unAdded = FindUnAddEdge(stem,sorted);
 
 		currentEdge = new ArrayList<Edge>();
@@ -67,7 +64,7 @@ public class Project{
 			}
 			currentEdge.add(unAdded.get(Rindex));
 			currentR=Rmax;
-			System.out.println("currentR"+currentR);
+			System.out.println("currentR "+currentR);
 			unAdded.remove(unAdded.get(Rindex));
 		}
 		for(int i = 0; i<currentEdge.size();i++) {
@@ -169,35 +166,25 @@ public class Project{
 		}
 		return stem;
 	}
+	
 	public static ArrayList<Edge> FindUnAddEdge(ArrayList<Edge> stem, Edge[] sortedEdges) {
 		ArrayList<Edge> unAddedEdge = new ArrayList<Edge>(); 
-		ArrayList<Integer> containedIndex = new ArrayList<Integer>();
-		for(int i = 0 ; i<sortedEdges.length;i++) {
-			for(int j = 0; j<stem.size();j++) {
-				if(sortedEdges[i].equals(stem.get(j))) {
-					containedIndex.add(i);
-				}
-			}
-		}
-		for(int i = 0; i<sortedEdges.length;i++) {
-			if(!containedIndex.contains(i)) {
-				unAddedEdge.add(sortedEdges[i]);
+		for(Edge e:sortedEdges){
+			if(!stem.contains(e)){
+				unAddedEdge.add(e);
 			}
 		}
 		return unAddedEdge;
 	}
-	public static double Probability(ArrayList<Edge> workedEdges, Edge[] sortedEdges) {
+	
+	public static double Probability(ArrayList<Edge> workedEdges) {
 		double probability =1;
-		//ArrayList<Edge> unWorked= new ArrayList<Edge>();
-		//unWorked = FindUnAddEdge(workedEdges,sortedEdges);
-		for(int i =0; i<workedEdges.size();i++) {
-			double temp =workedEdges.get(i).getR();
+
+		for(Edge e:workedEdges) {
+			double temp =e.getR();
 			probability = temp* probability;
-		}/*
-		for(int i =0; i<unWorked.size();i++) {
-			double temp =1 - unWorked.get(i).reliability;
-			probability = temp * probability;
-		}*/
+		}
+
 		return probability;
 	}
 
@@ -216,19 +203,15 @@ public class Project{
 		//System.out.println("edgesize "+edges.size()+" unaddedsize "+unAddedEdge.size());
 
 		double rTotal=0;
-		if((edges.size()+additional.size())<mstEdgeN){
-			return 0;
-		}else if((edges.size()+additional.size())==mstEdgeN &&isConnect(edges,additional)){
-			return Probability(edges,sorted);
+		if((edges.size()+additional.size())==mstEdgeN && isConnect(edges,additional)){
+			return Probability(edges);
 		}else{
 			if(!isConnect(edges,additional)){
 				return 0;
 			}
 			if(edges.size()>0){
 				Edge e=edges.get(0);
-				ArrayList<Edge> cloneEdge= new ArrayList<Edge>();
-				cloneEdge= (ArrayList<Edge>) edges.clone();
-
+				ArrayList<Edge> cloneEdge= (ArrayList<Edge>) edges.clone();
 
 				cloneEdge.remove(e);
 
