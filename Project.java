@@ -23,12 +23,21 @@ public class Project{
 	public static void main(String[] args) {
 		ReadFile("/Users/sentinel/Desktop/git/Network-Design/src/input.txt");
 		sorted = SortData(reliabilities,costs);
-		stem = FindStem(numOfNodes,sorted);
+		
+		currentEdge = FindStem(numOfNodes,sorted);
+//		for(int i =0; i<currentEdge.size();i++) {
+//			System.out.print(currentEdge.get(i).x);
+//			System.out.print("    "+currentEdge.get(i).y);
+//			System.out.print("    "+currentEdge.get(i).reliability);
+//			System.out.println("   "+currentEdge.get(i).cost);
+//		}
 		for(int i =0 ; i<stem.size();i++) {
 			double temp=stem.get(i).reliability;
 			reliability = temp*reliability;
 		}
 		unAdded = FindUnAddEdge(stem,sorted);
+		//System.out.println(unAdded.size());
+
 		while(reliability<expectedReliability) {
 
 			double[] rUnadded=new double[unAdded.size()];
@@ -36,9 +45,10 @@ public class Project{
 			for(int i =0; i<unAdded.size();i++) {
 				
 				Edge e = unAdded.get(i);
-				System.out.println(e.x);
+
 				ArrayList<Edge> cloneList = new ArrayList<Edge>();
 				cloneList = currentEdge;
+				System.out.println(currentEdge.size());
 				//ArrayList<Edge> cloneList =(ArrayList<Edge>)currentEdge.clone();
 				cloneList.add(e);
 				rUnadded[i]=findR(cloneList);
@@ -52,7 +62,7 @@ public class Project{
 			}
 			currentEdge.add(unAdded.get(Rindex));
 		}
-		for(int i = 1; i<currentEdge.size();i++) {
+		for(int i = 0; i<currentEdge.size();i++) {
 			System.out.print("x:" + currentEdge.get(i).x);
 			System.out.println("  y:" + currentEdge.get(i).y);
 		}
@@ -104,25 +114,27 @@ public class Project{
 	}
 	
     public static Edge[] SortData (double[] reliabilities, double[] costs){
-        Edge[] combined = new Edge [reliabilities.length];
-        for (int i = 0; i<reliabilities.length;i++){
-            for(int j = 0; j< costs.length; j++){
-                Edge temp = new Edge(i,j);
-                temp.setR(reliabilities[i]);
-                temp.setCost(costs[j]);
-                combined[i]=temp;
-            }
-        }
+    	Edge[] combined = new Edge [reliabilities.length];
+    	int abc=0;
+    	for(int i = 0; i< numOfNodes;i++) {
+    		for(int j =i+1; j<numOfNodes; j++) {
+    			Edge temp = new Edge(i,j);
+    			temp.setR(reliabilities[abc]);
+    			temp.setCost(costs[abc]);
+    			combined[abc]=temp;
+    			abc++;
+    		}
+    	}
         for (int i = 0; i < reliabilities.length; i++){     
             for (int j = 0; j < reliabilities.length-1; j++){ 
-                if (combined[i].reliability > combined[j+1].reliability){
+                if (combined[j].reliability < combined[j+1].reliability){
                     Edge temp = combined[j]; 
                     combined[j] = combined[j+1]; 
                     combined[j+1] = temp;
                 }
             }
         }
-        return combined;
+    	return combined;
     }
     public static ArrayList<Edge> FindStem(int numOfNodes, Edge[] sortedEdges){
         ArrayList<Integer> nodes = new ArrayList<>();
