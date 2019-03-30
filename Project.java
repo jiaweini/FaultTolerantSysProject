@@ -6,36 +6,35 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Project{
+	public static double expectedReliability = 0.95; //This is the desired probability
+	public static String fileURL="/Users/sentinel/Desktop/git/Network-Design/src/input.txt";
+	
+	
 	public static double[] costs;
 	public static double[] reliabilities;
 	public static ArrayList<Edge> stem = new ArrayList<Edge>();
 	public static ArrayList<Edge> unAdded = new ArrayList<Edge>();
 	public static int numOfNodes;
 	public static Edge[] sorted;
-	//public static double reliability=1;
-	public static double expectedReliability = 0.95;
 	public static double Rmax;
 	public static int Rindex;
-	public static double currentR=1; //current reliablility
-	public static int mstEdgeN; //number of edges for mst
-	public static ArrayList<Edge> currentEdge;
+	public static double currentR=1; //current reliability
+	public static int mstEdgeN; //number of edges for MinSpanTree
+	public static ArrayList<Edge> currentEdge; //Edges currently selected
 
 	@SuppressWarnings("unchecked")
-	public static void main(String[] args) {
-		ReadFile("/Users/sentinel/Desktop/git/Network-Design/src/input.txt");
+	public static void main(String[] args){
+		ReadFile(fileURL);
 		sorted = SortData(reliabilities,costs);
-
-		stem = FindStem(numOfNodes,sorted);
-
+		stem = FindStem(numOfNodes,sorted); // Minimum spanning tree: Edges
 		currentR=Probability(stem);
-		//System.out.println("currentR "+currentR);
+		System.out.println("Minimum Spanning Tree Reliability: "+currentR);
 		unAdded = FindUnAddEdge(stem,sorted);
 
 		currentEdge = new ArrayList<Edge>();
 		currentEdge = (ArrayList<Edge>) stem.clone();
 		mstEdgeN=stem.size();
 
-		//for(int xxxx=0;xxxx<1;xxxx++){
 		while(currentR<expectedReliability) {
 
 			double[] rUnadded=new double[unAdded.size()];
@@ -50,10 +49,9 @@ public class Project{
 
 				ArrayList<Edge> emptyL = new ArrayList<Edge>();
 
-				//System.out.println("cloneListe "+cloneList.size()+" cloneUnadded "+cloneUnadded.size());
 				rUnadded[i]=findR(cloneList,emptyL);
 
-				//System.out.println("hhhhah"+rUnadded[i]);
+
 			}
 			Rindex=0;
 			Rmax=rUnadded[0];
@@ -67,16 +65,21 @@ public class Project{
 			}
 			currentEdge.add(unAdded.get(Rindex));
 			currentR=Rmax;
-			//System.out.println("currentR "+currentR);
+			System.out.println("an Edge has been added. Current Reliablility: "+currentR);
 			unAdded.remove(unAdded.get(Rindex));
 		}
 		for(int i = 0; i<currentEdge.size();i++) {
-			System.out.print("node " +i+ " from " + currentEdge.get(i).x);
-			System.out.println(" to " + currentEdge.get(i).y);
-			//System.out.println("reliabl "+ currentEdge.get(i).reliability);
+			System.out.print("Edge " +i+ ": node " + currentEdge.get(i).x);
+			System.out.println(" - node " + currentEdge.get(i).y);
+			//System.out.println("reliable "+ currentEdge.get(i).reliability);
 		}
 		System.out.println("achieved reliability: " + Rmax);
 	}
+	
+	/** reads input file
+	 * 
+	 * @param fileName URL
+	 */
 	public static void ReadFile(String fileName){
 		String line = null;
 		String[] splited;
@@ -96,9 +99,7 @@ public class Project{
 					for(int i =0; i<splited.length; i++){
 						reliabilities[i] = Double.valueOf(splited[i]);;
 					}
-					//					for(int i= 0;i<reliabilities.length;i++) {
-					//					System.out.println(reliabilities[i]);
-					//					}
+
 				}
 				else if(line.contains("#")&&line.contains("cost")){
 					line = bufferedReader.readLine();
@@ -108,9 +109,7 @@ public class Project{
 					for(int i =0; i<splited.length; i++){
 						costs[i] = Double.valueOf(splited[i]);;
 					}
-					//					for(int i= 0;i<reliabilities.length;i++) {
-					//					System.out.println(costs[i]);
-					//					}
+				
 				}
 			}
 			bufferedReader.close();
@@ -145,6 +144,13 @@ public class Project{
 		}
 		return combined;
 	}
+	
+	/**
+	 * find MST
+	 * @param numOfNodes number of nodes
+	 * @param sortedEdges all possible edges
+	 * @return edges that create MSTs
+	 */
 	public static ArrayList<Edge> FindStem(int numOfNodes, Edge[] sortedEdges){
 		ArrayList<Integer> nodes = new ArrayList<>();
 		nodes.add(sortedEdges[0].getX());
@@ -172,6 +178,12 @@ public class Project{
 		return stem;
 	}
 	
+	/** gets edges that aren't in MST
+	 * 
+	 * @param stem MST edges
+	 * @param sortedEdges all edges
+	 * @return unadded edges
+	 */
 	public static ArrayList<Edge> FindUnAddEdge(ArrayList<Edge> stem, Edge[] sortedEdges) {
 		ArrayList<Edge> unAddedEdge = new ArrayList<Edge>(); 
 		for(Edge e:sortedEdges){
@@ -182,6 +194,11 @@ public class Project{
 		return unAddedEdge;
 	}
 	
+	/**
+	 * get reliability that all given edges works
+	 * @param workedEdges given edges
+	 * @return probability
+	 */
 	public static double Probability(ArrayList<Edge> workedEdges) {
 		double probability =1;
 
@@ -193,6 +210,7 @@ public class Project{
 		return probability;
 	}
 
+	
 	public static double TotalCosts(ArrayList<Edge> Edges) {
 		double totalCosts= 0;
 		for(int i=0;i<Edges.size();i++) {
@@ -201,8 +219,12 @@ public class Project{
 		return totalCosts;
 	}
 
-
-
+	/**
+ * find the reliability for given edges
+ * @param edges edges given
+ * @param additional reliable edges
+ * @return reliability
+ */
 	@SuppressWarnings("unchecked")
 	public static double findR(ArrayList<Edge> edges,ArrayList<Edge> additional){
 		//System.out.println("edgesize "+edges.size()+" unaddedsize "+unAddedEdge.size());
@@ -238,10 +260,13 @@ public class Project{
 		}
 
 	}
-
-
-
-
+	
+/**
+ * check if given edges connects all nodes
+ * @param edges removeable edges
+ * @param additional edges that are 100% reliable
+ * @return true=connected; false=not connected
+ */
 	public static boolean isConnect(ArrayList<Edge> edges,ArrayList<Edge> additional){
 		ArrayList<Integer> nodeConnected=new ArrayList<Integer>(); // 1=true, 0=false
 		Boolean change=true;

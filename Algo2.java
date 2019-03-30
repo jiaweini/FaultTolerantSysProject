@@ -4,9 +4,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Question2{
+public class Algo2{
 	public static double expectedReliability = 0.9; //This is the desired probability
-	public static double costConstraint = 5;
+	public static double costConstraint = 80;
 	public static String fileURL="/Users/sentinel/Desktop/git/Network-Design/src/input.txt";
 
 
@@ -30,6 +30,13 @@ public class Question2{
 		ReadFile(fileURL);
 		sorted = SortData(reliabilities,costs);
 		stem = FindStem(numOfNodes,sorted); // Minimum spanning tree: Edges
+		for(int i = 0; i<stem.size();i++) {
+			System.out.print(stem.get(i).x);
+			System.out.print("   "+stem.get(i).y);
+			System.out.print("   "+stem.get(i).reliability);
+			System.out.println("  "+stem.get(i).cost);
+		}
+
 		currentR=Probability(stem);
 		currentC=totalCost(stem);
 		System.out.println("Minimum Spanning Tree Reliability: "+currentR+ " Cost: "+currentC);
@@ -104,34 +111,18 @@ public class Question2{
 			System.out.println("Switching to algorithm B");
 			planB();
 		}
-		
-		
+	}catch(NullPointerException exc) {}
+		System.out.println("Minimum cost Spanning Tree does not satisfy cost constraint");
 	}
-		catch(NullPointerException ex) {
-			System.out.println("Error detected. Switching Algorith.");
-			Algo2.expectedReliability=expectedReliability;
-			Algo2.fileURL=fileURL;
-			Algo2.costConstraint=costConstraint;
-			
-			String[] argss = new String[1];
-			argss[0]="hahaha";
-			Algo2.main(argss);
-			
-			
-			
-			
+
 	
-		}
-	}
 
 	private static void planB() {
 		Project.expectedReliability=expectedReliability;
-		Project.fileURL=fileURL;
 		String[] argss= new String[2];
 		argss[0]="hahaha";
 		Project.main(argss);
-		double costt = totalCost(Project.currentEdge);
-		System.out.println("Cost is "+costt);
+		
 	}
 
 	/** reads input file
@@ -193,7 +184,7 @@ public class Question2{
 		}
 		for (int i = 0; i < reliabilities.length; i++){     
 			for (int j = 0; j < reliabilities.length-1; j++){ 
-				if (combined[j].reliability < combined[j+1].reliability){
+				if (combined[j].cost > combined[j+1].cost){
 					Edge temp = combined[j]; 
 					combined[j] = combined[j+1]; 
 					combined[j+1] = temp;

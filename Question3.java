@@ -4,9 +4,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Question2{
-	public static double expectedReliability = 0.9; //This is the desired probability
-	public static double costConstraint = 5;
+public class Question3{
+	public static double expectedReliability = 0.5; //This is the desired probability
+	public static double costConstraint = 120;
 	public static String fileURL="/Users/sentinel/Desktop/git/Network-Design/src/input.txt";
 
 
@@ -26,7 +26,7 @@ public class Question2{
 	public static ArrayList<Edge> currentEdge; //Edges currently selected
 
 	@SuppressWarnings("unchecked")
-	public static void main(String[] args){try {
+	public static void main(String[] args){
 		ReadFile(fileURL);
 		sorted = SortData(reliabilities,costs);
 		stem = FindStem(numOfNodes,sorted); // Minimum spanning tree: Edges
@@ -39,8 +39,7 @@ public class Question2{
 		currentEdge = (ArrayList<Edge>) stem.clone();
 		mstEdgeN=stem.size();
 
-		//for(int xxxx=0;xxxx<1;xxxx++){
-		while(currentR<expectedReliability && currentC<costConstraint) {
+		while(currentC<costConstraint) {
 
 			double[] rUnadded=new double[unAdded.size()];
 			double[] cUnadded=new double[unAdded.size()];
@@ -75,7 +74,7 @@ public class Question2{
 
 			}
 			if(Rmax<0) {
-				System.out.println("Cannot find feasible solution");
+				
 				feasible=false;
 				break;
 			}
@@ -85,53 +84,17 @@ public class Question2{
 			System.out.println("an Edge has been added. Current Reliablility: "+currentR+" Current Cost: "+currentC);
 			unAdded.remove(unAdded.get(Rindex));
 
-			if(currentR>=expectedReliability && currentC>=costConstraint) {
-				System.out.println("requirements fulfilled");
-				break;
-			}
+
 		}
-
-
+		System.out.println("No more room for improvement.");
+		System.out.println("Solution found:");
 		for(int i = 0; i<currentEdge.size()&&feasible;i++) {
 			System.out.print("Edge " +i+ ": node " + currentEdge.get(i).x);
 			System.out.println(" - node " + currentEdge.get(i).y);
 			//System.out.println("reliable "+ currentEdge.get(i).reliability);
-
 			//System.out.println("achieved reliability: " + Rmax);
 		}
 		
-		if(!feasible) {
-			System.out.println("Switching to algorithm B");
-			planB();
-		}
-		
-		
-	}
-		catch(NullPointerException ex) {
-			System.out.println("Error detected. Switching Algorith.");
-			Algo2.expectedReliability=expectedReliability;
-			Algo2.fileURL=fileURL;
-			Algo2.costConstraint=costConstraint;
-			
-			String[] argss = new String[1];
-			argss[0]="hahaha";
-			Algo2.main(argss);
-			
-			
-			
-			
-	
-		}
-	}
-
-	private static void planB() {
-		Project.expectedReliability=expectedReliability;
-		Project.fileURL=fileURL;
-		String[] argss= new String[2];
-		argss[0]="hahaha";
-		Project.main(argss);
-		double costt = totalCost(Project.currentEdge);
-		System.out.println("Cost is "+costt);
 	}
 
 	/** reads input file
