@@ -15,7 +15,7 @@ public class Algo2{
 	public static double[] reliabilities;
 	public static ArrayList<Edge> stem = new ArrayList<Edge>();
 	public static ArrayList<Edge> unAdded = new ArrayList<Edge>();
-	public static int numOfNodes;
+	public static int NodeNums;
 	public static Edge[] sorted;
 	public static double Rmax;
 	public static double C;
@@ -31,8 +31,8 @@ public class Algo2{
 		sorted = SortData(reliabilities,costs);
 		stem = FindStem(numOfNodes,sorted); // Minimum spanning tree: Edges
 		for(int i = 0; i<stem.size();i++) {
-			System.out.print(stem.get(i).x);
-			System.out.print("   "+stem.get(i).y);
+			System.out.print(stem.get(i).cityA);
+			System.out.print("   "+stem.get(i).cityB);
 			System.out.print("   "+stem.get(i).reliability);
 			System.out.println("  "+stem.get(i).cost);
 		}
@@ -100,8 +100,8 @@ public class Algo2{
 
 
 		for(int i = 0; i<currentEdge.size()&&feasible;i++) {
-			System.out.print("Edge " +i+ ": node " + currentEdge.get(i).x);
-			System.out.println(" - node " + currentEdge.get(i).y);
+			System.out.print("Edge " +i+ ": node " + currentEdge.get(i).cityA);
+			System.out.println(" - node " + currentEdge.get(i).cityB);
 			//System.out.println("reliable "+ currentEdge.get(i).reliability);
 
 			//System.out.println("achieved reliability: " + Rmax);
@@ -138,7 +138,7 @@ public class Algo2{
 			while((line = bufferedReader.readLine())!= null){
 				if(line.contains("#")&&line.contains("nodes")){
 					line = bufferedReader.readLine();
-					numOfNodes = Integer.parseInt(line);
+					NodeNums = Integer.parseInt(line);
 				}
 				else if(line.contains("#")&&line.contains("reliability")){
 					line = bufferedReader.readLine();
@@ -173,8 +173,8 @@ public class Algo2{
 	public static Edge[] SortData (double[] reliabilities, double[] costs){
 		Edge[] combined = new Edge [reliabilities.length];
 		int abc=0;
-		for(int i = 0; i< numOfNodes;i++) {
-			for(int j =i+1; j<numOfNodes; j++) {
+		for(int i = 0; i< NodeNums;i++) {
+			for(int j =i+1; j<NodeNums; j++) {
 				Edge temp = new Edge(i,j);
 				temp.setR(reliabilities[abc]);
 				temp.setCost(costs[abc]);
@@ -202,14 +202,14 @@ public class Algo2{
 	 */
 	public static ArrayList<Edge> FindStem(int numOfNodes, Edge[] sortedEdges){
 		ArrayList<Integer> nodes = new ArrayList<>();
-		nodes.add(sortedEdges[0].getX());
-		nodes.add(sortedEdges[0].getY());
+		nodes.add(sortedEdges[0].getcityA());
+		nodes.add(sortedEdges[0].getcityB());
 		ArrayList<Edge> stem = new ArrayList<>();
 		stem.add(sortedEdges[0]);
 		for(int i = 1; i<sortedEdges.length; i++){
-			if(nodes.size() == numOfNodes) break;
-			int x = sortedEdges[i].getX();
-			int y = sortedEdges[i].getY();
+			if(nodes.size() == NodeNums) break;
+			int x = sortedEdges[i].getcityA();
+			int y = sortedEdges[i].getcityB();
 			if(nodes.contains(x) && nodes.contains(y)){
 				continue;
 			} else{
@@ -312,7 +312,7 @@ public class Algo2{
 	public static boolean isConnect(ArrayList<Edge> edges,ArrayList<Edge> additional){
 		ArrayList<Integer> nodeConnected=new ArrayList<Integer>(); // 1=true, 0=false
 		Boolean change=true;
-		for(int aa=0;aa<numOfNodes;aa++){
+		for(int aa=0;aa<NodeNums;aa++){
 			nodeConnected.add(0);
 		}
 		nodeConnected.set(0,1);
@@ -320,16 +320,16 @@ public class Algo2{
 		while(change){
 			change=false;
 			for(Edge e:edges){
-				if( nodeConnected.get(e.getX())!= nodeConnected.get(e.getY()) ){
-					nodeConnected.set(e.getX(),1);
-					nodeConnected.set(e.getY(),1);
+				if( nodeConnected.get(e.getcityA())!= nodeConnected.get(e.getcityB()) ){
+					nodeConnected.set(e.getcityA(),1);
+					nodeConnected.set(e.getcityB(),1);
 					change=true;
 				}
 			}
 			for(Edge e:additional){
-				if( nodeConnected.get(e.getX())!= nodeConnected.get(e.getY()) ){
-					nodeConnected.set(e.getX(),1);
-					nodeConnected.set(e.getY(),1);
+				if( nodeConnected.get(e.getcityA())!= nodeConnected.get(e.getcityB()) ){
+					nodeConnected.set(e.getcityA(),1);
+					nodeConnected.set(e.getcityB(),1);
 					change=true;
 				}
 			}
