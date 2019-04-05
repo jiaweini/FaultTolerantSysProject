@@ -93,8 +93,8 @@ public class Question2{
 
 
 		for(int i = 0; i<currentEdge.size()&&feasible;i++) {
-			System.out.print("Edge " +i+ ": node " + currentEdge.get(i).x);
-			System.out.println(" - node " + currentEdge.get(i).y);
+			System.out.print("Edge " +i+ ": node " + currentEdge.get(i).cityA);
+			System.out.println(" - node " + currentEdge.get(i).cityB);
 			//System.out.println("reliable "+ currentEdge.get(i).reliability);
 
 			//System.out.println("achieved reliability: " + Rmax);
@@ -330,15 +330,15 @@ public class Question2{
 			change=false;
 			for(Edge e:edges){
 				if( nodeConnected.get(e.getcityA())!= nodeConnected.get(e.getcityB()) ){
-					nodeConnected.set(e.getX(),1);
-					nodeConnected.set(e.getY(),1);
+					nodeConnected.set(e.getcityA(),1);
+					nodeConnected.set(e.getcityB(),1);
 					change=true;
 				}
 			}
 			for(Edge e:additional){
 				if( nodeConnected.get(e.getcityA())!= nodeConnected.get(e.getcityB()) ){
-					nodeConnected.set(e.getX(),1);
-					nodeConnected.set(e.getY(),1);
+					nodeConnected.set(e.getcityA(),1);
+					nodeConnected.set(e.getcityB(),1);
 					change=true;
 				}
 			}
