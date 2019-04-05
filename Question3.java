@@ -168,11 +168,11 @@ public class Question3{
 
 	/**
 	 * find MST
-	 * @param numOfNodes number of nodes
+	 * @param NodeNums number of nodes
 	 * @param sortedEdges all possible edges
 	 * @return edges that create MSTs
 	 */
-	public static ArrayList<Edge> FindStem(int numOfNodes, Edge[] sortedEdges){
+	public static ArrayList<Edge> FindStem(int NodeNums, Edge[] sortedEdges){
 		ArrayList<Integer> nodes = new ArrayList<>();
 		nodes.add(sortedEdges[0].getcityA());
 		nodes.add(sortedEdges[0].getcityB());
@@ -292,16 +292,16 @@ public class Question3{
 		while(change){
 			change=false;
 			for(Edge e:edges){
-				if( nodeConnected.get(e.getX())!= nodeConnected.get(e.getY()) ){
-					nodeConnected.set(e.getX(),1);
-					nodeConnected.set(e.getY(),1);
+				if( nodeConnected.get(e.getcityA())!= nodeConnected.get(e.getcityB()) ){
+					nodeConnected.set(e.getcityA(),1);
+					nodeConnected.set(e.getcityB(),1);
 					change=true;
 				}
 			}
 			for(Edge e:additional){
-				if( nodeConnected.get(e.getX())!= nodeConnected.get(e.getY()) ){
-					nodeConnected.set(e.getX(),1);
-					nodeConnected.set(e.getY(),1);
+				if( nodeConnected.get(e.getcityA())!= nodeConnected.get(e.getcityB()) ){
+					nodeConnected.set(e.getcityA(),1);
+					nodeConnected.set(e.getcityB(),1);
 					change=true;
 				}
 			}
