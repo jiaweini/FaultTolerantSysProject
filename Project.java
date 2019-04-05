@@ -14,7 +14,7 @@ public class Project{
 	public static double[] reliabilities;
 	public static ArrayList<Edge> stem = new ArrayList<Edge>();
 	public static ArrayList<Edge> unAdded = new ArrayList<Edge>();
-	public static int NodeNum;
+	public static int NodeNums;
 	public static Edge[] sorted;
 	public static double Rmax;
 	public static int Rindex;
