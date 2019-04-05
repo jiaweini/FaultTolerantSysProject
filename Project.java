@@ -147,11 +147,11 @@ public class Project{
 	
 	/**
 	 * find MST
-	 * @param numOfNodes number of nodes
+	 * @param NodeNums number of nodes
 	 * @param sortedEdges all possible edges
 	 * @return edges that create MSTs
 	 */
-	public static ArrayList<Edge> FindStem(int numOfNodes, Edge[] sortedEdges){
+	public static ArrayList<Edge> FindStem(int NodeNums, Edge[] sortedEdges){
 		ArrayList<Integer> nodes = new ArrayList<>();
 		nodes.add(sortedEdges[0].getcityA());
 		nodes.add(sortedEdges[0].getcityB());
