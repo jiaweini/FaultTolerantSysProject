@@ -29,7 +29,7 @@ public class Question2{
 	public static void main(String[] args){try {
 		ReadFile(fileURL);
 		sorted = SortData(reliabilities,costs);
-		stem = FindStem(numOfNodes,sorted); // Minimum spanning tree: Edges
+		stem = FindStem(NodeNums,sorted); // Minimum spanning tree: Edges
 		currentR=Probability(stem);
 		currentC=totalCost(stem);
 		System.out.println("Minimum Spanning Tree Reliability: "+currentR+ " Cost: "+currentC);
@@ -147,7 +147,7 @@ public class Question2{
 			while((line = bufferedReader.readLine())!= null){
 				if(line.contains("#")&&line.contains("nodes")){
 					line = bufferedReader.readLine();
-					numOfNodes = Integer.parseInt(line);
+					NodeNums = Integer.parseInt(line);
 				}
 				else if(line.contains("#")&&line.contains("reliability")){
 					line = bufferedReader.readLine();
