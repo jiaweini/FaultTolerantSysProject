@@ -153,14 +153,14 @@ public class Project{
 	 */
 	public static ArrayList<Edge> FindStem(int numOfNodes, Edge[] sortedEdges){
 		ArrayList<Integer> nodes = new ArrayList<>();
-		nodes.add(sortedEdges[0].getX());
-		nodes.add(sortedEdges[0].getY());
+		nodes.add(sortedEdges[0].getcityA());
+		nodes.add(sortedEdges[0].getcityB());
 		ArrayList<Edge> stem = new ArrayList<>();
 		stem.add(sortedEdges[0]);
 		for(int i = 1; i<sortedEdges.length; i++){
 			if(nodes.size() == numOfNodes) break;
-			int x = sortedEdges[i].getX();
-			int y = sortedEdges[i].getY();
+			int x = sortedEdges[i].getcityA();
+			int y = sortedEdges[i].getcityB();
 			if(nodes.contains(x) && nodes.contains(y)){
 				continue;
 			} else{
