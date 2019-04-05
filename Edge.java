@@ -1,27 +1,18 @@
 public class Edge{
-    public int x;
-    public int y;
+    public int cityA;
+    public int cityB;
     public double reliability;
     public double cost;
-    public Edge(int x, int y){
-        this.x = x;
-        this.y = y;
+    public Edge(int cityA, int cityB){
+        this.cityA = cityA;
+        this.cityB = cityB;
     }
 
-    public boolean bigger(Edge a1, Edge a2){
-        if(a1.reliability<a2.reliability){
-            return true;
-        }
-        else{
-            return false;
-        }
+    public int getcityA(){
+        return cityA;
     }
-
-    public int getX(){
-        return x;
-    }
-    public int getY(){
-        return y;
+    public int getcityB(){
+        return cityB;
     }
 
     public double getR(){
